@@ -293,7 +293,9 @@ function getProductDetail(id) {
 		if(cur.id === id) {
 			console.log(data[type][index])
 
-			return JSON.stringify(data[type][index])
+			const productDetial = JSON.stringify(data[type][index])
+
+			return productDetial
 		}
 	})
 }
