@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>her - HOME</title>
+
+	<!-- google fonts-->
+	<link href='https://fonts.googleapis.com/earlyaccess/notosanstc.css' rel='stylesheet' />
+
+	<!-- css -->
+	<link href='css/index.css' type='text/css' rel='stylesheet' />
+
+	<!-- js -->
+	<script src='js/jquery-3.2.1.js' type='text/javascript'></script>
+	<script src='js/data.js' type='text/javascript'></script>
+	<script src='js/index.js' type='text/javascript'></script>
+	<script src='js/package_basket.js' type='text/javascript'></script>
+
+</head>
+<body>
+	<div class='all chi_16_40'>
+		<!-- Header -->
+		<div class='block'>
+			<div class='block20 flex_right'>
+			<!-- Sub Navbar -->
+				<div class='box400 border_bottom flex_spacebetween chi_12'>
+					<a href='#'>
+						<span class='bgc_white'>購物說明</span>
+					</a>
+					<a href='#'>
+						<span class='bgc_white'>聯絡我們</span>
+					</a>
+					<a href='#'>
+						<span class='bgc_white'>忘記密碼</span>
+					</a>
+					<a href='#'>
+						<span class='bgc_white'>Facebook</span>
+					</a>
+					<a href='#'>
+						<span class='bgc_white'>Instagram</span>
+					</a>
+				</div>
+			</div>
+			<div class='block100 flex_block'>
+				<!-- Logo -->
+				<div class='box160 flex_center'>
+					<div id='Logo'></div>
+				</div>
+				<!-- Main Navbar -->
+				<div class='box500 flex_spacebetween chi_20'>
+					<span
+						class='bgc_white cursor'
+						onclick='setHomePage()'>HOME</span>
+					<span
+						class='bgc_white cursor'
+						onclick='setCategory("card")'>CARD</span>
+					<span
+						class='bgc_white cursor'
+						onclick='setCategory("font")'>FONT</span>
+					<span
+						class='bgc_white cursor'
+						onclick='setCategory("gift")'>GIFT</span>
+					<span
+						class='bgc_white cursor'
+						onclick=''>ABOUT</span>
+				</div>
+				<!-- Member -->
+				<div class='box200 flex_right'>
+					<div>b00303037</div>
+				</div>
+				<!-- Mailbox -->
+				<div class='box200 flex_center'>
+					<div class='flex_center'>
+						<div>郵寄箱</div>
+						<img
+							src='images/icon_mailbox.png'
+							width='40'
+							height='40' />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='block20'></div>
+
+		<!-- Package Basket -->
+		<div id='Package_Basket' class='block'>
+			<div class='block40 flex_spacebetween'>
+				<div class='rec_text_40'>包裹組合籃｜PACKAGE BASKET</div>
+				<div class='rec40 flex_center'>
+					<div class='rec40'>將</div>
+					<div class='rec40'>〈</div>
+					<input
+						name='packQuantity'
+						class='rec_digit chi_16_20 bgc_white'
+						value='1'
+						disabled />
+					<div class='rec40'>〉</div>
+					<div class='rec40'>個包裹</div>
+
+					<button
+						type='button'
+						class='button_roundcorner chi_16_30 bgc_pink'>加入郵寄箱</button>
+				</div>
+			</div>
+			<div class='block320 flex_spacebetween'>
+				<!--_____________ Basket Card Box _____________-->
+				<div
+					id='Basket_card_box'
+					class='box220 bgc_card'>
+				</div>
+				<!--_____________ Basket Font Box _____________-->
+				<div
+					id='Basket_font_box'
+					class='box220 bgc_font'>
+				</div>
+				<!--_____________ Basket Gift Box _____________-->
+				<div
+					id='Basket_gift_box'
+					class='box580 bgc_gift'>
+				</div>
+			</div>
+		</div>
+		<div class='block20'></div>
+
+		<div
+			id='Content_block'
+			class='block'></div>
+	</div>
+</body>
+</html>
