@@ -2,6 +2,8 @@ $(function() {
 	setHomePage()
 })
 
+const webapp = '/her'
+
 function setHomePage() {
 	setHomeBlocks()
 	setRecommend()

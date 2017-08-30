@@ -145,13 +145,13 @@ function loadCookieToBasket() {
 const cardBoxEmpty = `
 <div class='block220'>
 	<img
-		src='images/cover_card.png'
+		src= ${webapp} + '/images/cover_card.png'
 		width='220'
 		height='220' />
 </div>
 <div class='block60 flex_center bgc_white'>
 	<img
-		src='images/title_card.png'
+		src= ${webapp} + '/images/title_card.png'
 		width='40'
 		height='40'
 		class='cursor'
@@ -165,13 +165,13 @@ const cardBoxEmpty = `
 const fontBoxEmpty = `
 <div class='block220'>
 	<img
-		src='images/cover_font.png'
+		src= ${webapp} + '/images/cover_font.png'
 		width='220'
 		height='220' />
 </div>
 <div class='block60 flex_center bgc_white'>
 	<img
-		src='images/title_font.png'
+		src= ${webapp} + '/images/title_font.png'
 		width='40'
 		height='40'
 		class='curosr'
@@ -202,12 +202,12 @@ const cardOrFontBoxContent = (data) => `
 
 const giftBoxEmpty = `
 <div class='block220'>
-	<img src='images/cover_gift.png'
+	<img src= ${webapp} + '/images/cover_gift.png'
 		 width='580'
 		 height='220' />
 </div>
 <div class='block60 flex_center bgc_white'>
-	<img src='images/title_gift.png'
+	<img src= ${webapp} + '/images/title_gift.png'
 		 width='40'
 		 height='40'
 		 class='cursor'
