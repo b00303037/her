@@ -46,12 +46,12 @@ function addToBasket(id) {
 	}
 
 	if(type === 'card' || type === 'font') {
-		herObject[type] = id
+		cookie[type] = id
 	} else if(type === 'gift') {
-		if(herObject.hasOwnProperty('gifts')) {
-			herObject.gifts[id] =  1
+		if(cookie.hasOwnProperty('gifts')) {
+			cookie.gifts[id] =  1
 		} else {
-			herObject = {
+			cookie = {
 				gifts: {
 					[id]: 1
 				}
@@ -59,7 +59,7 @@ function addToBasket(id) {
 		}
 	}
 
-	setHer(herObject, 7)
+	setHer(cookie, 7)
 	loadCookieToBasket()
 }
 
@@ -81,16 +81,16 @@ function removeFromBasket(id) {
 	}
 
 	if(type === 'card' || type === 'font') {
-		delete herObject[type]
+		delete cookie[type]
 	} else if(type === 'gift') {
 		console.log('delete: '+ id)
-		delete herObject.gifts[id]
-		if($.isEmptyObject(herObject.gifts)) {
-			delete herObject.gifts
+		delete cookie.gifts[id]
+		if($.isEmptyObject(cookie.gifts)) {
+			delete cookie.gifts
 		}
 	}
 
-	setHer(herObject, 7)
+	setHer(cookie, 7)
 	loadCookieToBasket()
 }
 
