@@ -51,11 +51,8 @@ function addToBasket(id) {
 		if(cookie.hasOwnProperty('gifts')) {
 			cookie.gifts[id] =  1
 		} else {
-			cookie = {
-				gifts: {
-					[id]: 1
-				}
-			}
+			herObject.gifts = {}
+			herObject.gifts[id] =  1
 		}
 	}
 
@@ -294,7 +291,7 @@ function getProductDetail(id) {
 
 	data[type].map((cur, index) => {
 		if(cur.id === id) {
-			console.log('find ' + id)
+			console.log(data[type][index])
 			return data[type][index]
 		}
 	})
