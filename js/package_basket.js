@@ -97,7 +97,7 @@ function loadCookieToBasket() {
 	if(cookie.hasOwnProperty('card')) {
 		const cardId = cookie.card
 
-		const cardData = getProductDetail(cardId)
+		const cardData = JSON.parse(getProductDetail(cardId))
 		console.log(cardData)
 
 		// renderBasketCardBoxView(cardData)
@@ -109,7 +109,7 @@ function loadCookieToBasket() {
 	if(cookie.hasOwnProperty('font')) {
 		const fontId = cookie.font
 
-		const fontData = getProductDetail(fontId)
+		const fontData = JSON.parse(getProductDetail(fontId))
 		console.log(fontData)
 
 		// renderBasketFontBoxView(fontData)
@@ -123,7 +123,7 @@ function loadCookieToBasket() {
 
 		const giftsData = Object.keys(gifts).reduce((acc, giftId) => {
 
-			let giftData = getProductDetail(giftId)
+			let giftData = JSON.parse(getProductDetail(giftId))
 			giftData.quantity = gifts[giftId]
 			console.log(giftData)
 
@@ -293,7 +293,7 @@ function getProductDetail(id) {
 		if(cur.id === id) {
 			console.log(data[type][index])
 
-			return JSON.parse(data[type][index])
+			return JSON.stringify(data[type][index])
 		}
 	})
 }
