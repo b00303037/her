@@ -5,6 +5,7 @@ $(function() {
 const webapp = '/her'
 
 function setHomePage() {
+	document.title = 'her - HOME'
 	setHomeBlocks()
 	setRecommend()
 	setAd()
@@ -99,12 +100,15 @@ function setCategoryBlocks(type) {
 
 	switch(type) {
 		case 'card':
+			document.title = 'her - CARD'
 			$('#js_title').text('卡片｜CARD')
 			break
 		case 'font':
+			document.title = 'her - FONT'
 			$('#js_title').text('手寫字｜FONT')
 			break
 		case 'gift':
+			document.title = 'her - GIFT'
 			$('#js_title').text('禮物｜GIFT')
 			break
 	}
