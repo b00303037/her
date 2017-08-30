@@ -1,6 +1,5 @@
 $(function() {
 	cookie = getCookie()
-	document.cookie = 'her=' + JSON.stringify(cookie)
 })
 
 let cookie = {}
