@@ -351,14 +351,14 @@ textarea {
 	height: 40px;
 
 	display: inline-block;
-	margin: 0px;
+	margin: 0px 20px;
 }
 
 .rec_text_60 {
 	height: 60px;
 
 	display: inline-block;
-	margin: 0px;
+	margin: 0px 20px;
 }
 
 .rec_digit {
@@ -681,11 +681,11 @@ textarea {
 /*__________________ Background __________________*/
 /*background: bg-image position/bg-size bg-repeat;*/
 .bgi_minus {
-	background: url('../images/_for_views/_package_basket/button_minus_quantity.png') center/20px 20px no-repeat;
+	background: url('../images/button_minus_quantity.png') center/20px 20px no-repeat;
 }
 
 .bgi_plus {
-	background: url('../images/_for_views/_package_basket/button_plus_quantity.png') center/20px 20px no-repeat;
+	background: url('../images/button_plus_quantity.png') center/20px 20px no-repeat;
 }
 
 .bgi_add_to_collection {

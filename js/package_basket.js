@@ -1,9 +1,13 @@
 $(function() {
 	cookie = getCookie()
+	loadCookieToBasket()
 })
 
+// Object cookie
 let cookie = {}
 
+
+// get cookie named 'her', parse to Object and return
 function getCookie() {
 	const decodedCookie = decodeURIComponent(document.cookie);
   const ca = decodedCookie.split(';');
@@ -17,9 +21,11 @@ function getCookie() {
       return JSON.parse(c.substring('her='.length, c.length));
     }
   }
+  // if cookie doesn't exist yet, set cookie with Object cookie {}
   setCookie(cookie, 7)
 }
 
+// set cookie with Object cookie
 function setCookie(cookie, exdays) {
 	console.log('set cookie')
   const now = new Date();
@@ -28,22 +34,11 @@ function setCookie(cookie, exdays) {
   document.cookie = "her=" + JSON.stringify(cookie) + ";" + expires + ";path=/";
 }
 
+
 function addToBasket(id) {
 	console.log('addToBasket(' + id + ')')
-	const prefix = id.slice(0, 1).toLowerCase()
 
-	let type
-	switch(prefix) {
-		case 'c':
-			type = 'card'
-			break;
-		case 'f':
-			type = 'font'
-			break;
-		case 'g':
-			type = 'gift'
-			break;
-	}
+	const type = getType(id)
 
 	if(type === 'card' || type === 'font') {
 		cookie[type] = id
@@ -51,8 +46,8 @@ function addToBasket(id) {
 		if(cookie.hasOwnProperty('gifts')) {
 			cookie.gifts[id] =  1
 		} else {
-			herObject.gifts = {}
-			herObject.gifts[id] =  1
+			cookie.gifts = {}
+			cookie.gifts[id] =  1
 		}
 	}
 
@@ -62,20 +57,8 @@ function addToBasket(id) {
 
 function removeFromBasket(id) {
 	console.log('removeFromBasket(' + id + ')')
-	const prefix = id.slice(0, 1).toLowerCase()
 
-	let type
-	switch(prefix) {
-		case 'c':
-			type = 'card'
-			break;
-		case 'f':
-			type = 'font'
-			break;
-		case 'g':
-			type = 'gift'
-			break;
-	}
+	const type = getType(id)
 
 	if(type === 'card' || type === 'font') {
 		delete cookie[type]
@@ -97,10 +80,10 @@ function loadCookieToBasket() {
 	if(cookie.hasOwnProperty('card')) {
 		const cardId = cookie.card
 
-		const cardData = JSON.parse(getProductDetail(cardId))
+		const cardData = getProductDetail(cardId)
 		console.log(cardData)
 
-		// renderBasketCardBoxView(cardData)
+		renderBasketCardBoxView(cardData)
 
 	} else {
 		$('#Basket_card_box').html(cardBoxEmpty)
@@ -109,10 +92,10 @@ function loadCookieToBasket() {
 	if(cookie.hasOwnProperty('font')) {
 		const fontId = cookie.font
 
-		const fontData = JSON.parse(getProductDetail(fontId))
+		const fontData = getProductDetail(fontId)
 		console.log(fontData)
 
-		// renderBasketFontBoxView(fontData)
+		renderBasketFontBoxView(fontData)
 
 	} else {
 		$('#Basket_font_box').html(fontBoxEmpty)
@@ -123,7 +106,7 @@ function loadCookieToBasket() {
 
 		const giftsData = Object.keys(gifts).reduce((acc, giftId) => {
 
-			let giftData = JSON.parse(getProductDetail(giftId))
+			let giftData = getProductDetail(giftId)
 			giftData.quantity = gifts[giftId]
 			console.log(giftData)
 
@@ -132,23 +115,38 @@ function loadCookieToBasket() {
 			return acc
 		}, [])
 
-		// renderBasketGiftBoxView(giftsData)
+		renderBasketGiftBoxView(giftsData)
 
 	} else {
 		$('#Basket_gift_box').html(giftBoxEmpty)
 	}
 }
 
+function renderBasketCardBoxView(cardData) {
+	$('#Basket_card_box').empty()
+	$('#Basket_card_box').append(cardOrFontBoxContent(cardData))
+}
+
+function renderBasketFontBoxView(fontData) {
+	$('#Basket_font_box').empty()
+	$('#Basket_font_box').append(cardOrFontBoxContent(fontData))
+}
+
+function renderBasketGiftBoxView(giftsData) {
+	$('#Basket_gift_box').empty()
+	$('#Basket_gift_box').append(giftBoxContent(giftsData))
+}
+
 const cardBoxEmpty = `
 <div class='block220'>
 	<img
-		src= ${webapp + '/images/cover_card.png'}
+		src= 'images/cover_card.png'
 		width='220'
 		height='220' />
 </div>
 <div class='block60 flex_center bgc_white'>
 	<img
-		src= ${webapp + '/images/title_card.png'}
+		src= 'images/title_card.png'
 		width='40'
 		height='40'
 		class='cursor'
@@ -162,16 +160,16 @@ const cardBoxEmpty = `
 const fontBoxEmpty = `
 <div class='block220'>
 	<img
-		src= ${webapp + '/images/cover_font.png'}
+		src= 'images/cover_font.png'
 		width='220'
 		height='220' />
 </div>
 <div class='block60 flex_center bgc_white'>
 	<img
-		src= ${webapp + '/images/title_font.png'}
+		src= 'images/title_font.png'
 		width='40'
 		height='40'
-		class='curosr'
+		class='cursor'
 		onclick='setCategory("font")' />
 </div>
 <div class='block40 flex_spacebetween'>
@@ -199,16 +197,16 @@ const cardOrFontBoxContent = (data) => `
 
 const giftBoxEmpty = `
 <div class='block220'>
-	<img src= ${webapp + '/images/cover_gift.png'}
+	<img src= 'images/cover_gift.png'
 		 width='580'
 		 height='220' />
 </div>
 <div class='block60 flex_center bgc_white'>
-	<img src= ${webapp + '/images/title_gift.png'}
+	<img src= 'images/title_gift.png'
 		 width='40'
 		 height='40'
 		 class='cursor'
-		 onclick='setCategory(gift)' />
+		 onclick='setCategory("gift")' />
 </div>
 <div class='block40 flex_spacebetween'>
 	<div class='rec_text_40 chi_20'>GIFT</div>
@@ -219,7 +217,7 @@ const getGiftsDataHTML = (giftsData) => {
 	return giftsData.reduce((acc, gift) => acc += `
 		<div class='rec60 flex_left'>
 			<div class='square60'>
-				<img src=''
+				<img src='${gift.cover}'
 					 width='60'
 					 height='60' />
 				<button
@@ -274,6 +272,13 @@ const giftBoxContent = (giftsData) => `
 `
 
 function getProductDetail(id) {
+
+	const type = getType(id)
+
+	return R.find(R.propEq('id', id))(data[type])
+}
+
+function getType(id) {
 	const prefix = id.slice(0, 1).toLowerCase()
 	let type
 
@@ -289,15 +294,7 @@ function getProductDetail(id) {
 			break;
 	}
 
-	data[type].map((cur, index) => {
-		if(cur.id === id) {
-			console.log(data[type][index])
-
-			const productDetial = JSON.stringify(data[type][index])
-
-			return productDetial
-		}
-	})
+	return type
 }
 
 function calculateGiftsSum(giftsData) {
