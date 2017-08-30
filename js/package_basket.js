@@ -100,10 +100,10 @@ function loadCookieToBasket() {
 	if(cookie.hasOwnProperty('card')) {
 		const cardId = cookie.card
 
-		getProductDetail(cardId)
-		.then((cardData) => {
-			renderBasketCardBoxView(cardData)
-		})
+		const cardData = getProductDetail(cardId)
+		console.log(cardData)
+
+		// renderBasketCardBoxView(cardData)
 
 	} else {
 		$('#Basket_card_box').html(cardBoxEmpty)
@@ -112,10 +112,10 @@ function loadCookieToBasket() {
 	if(cookie.hasOwnProperty('font')) {
 		const fontId = cookie.font
 
-		getProductDetail(fontId)
-		.then((fontData) => {
-			renderBasketFontBoxView(fontData)
-		})
+		const fontData = getProductDetail(fontId)
+		console.log(fontData)
+
+		// renderBasketFontBoxView(fontData)
 
 	} else {
 		$('#Basket_font_box').html(fontBoxEmpty)
@@ -126,21 +126,16 @@ function loadCookieToBasket() {
 
 		const giftsData = Object.keys(gifts).reduce((acc, giftId) => {
 
-			getProductDetail(giftId)
-			.then((result) => {
+			let giftData = getProductDetail(giftId)
+			giftData.quantity = gifts[giftId]
+			console.log(giftData)
 
-				const giftData = {
-					quantity: gifts[giftId],
-					...result
-				}
-
-				acc.push(giftData)
-			})
+			acc.push(giftData)
 
 			return acc
 		}, [])
 
-		renderBasketGiftBoxView(giftsData)
+		// renderBasketGiftBoxView(giftsData)
 
 	} else {
 		$('#Basket_gift_box').html(giftBoxEmpty)
@@ -282,7 +277,26 @@ const giftBoxContent = (giftsData) => `
 `
 
 function getProductDetail(id) {
+	const prefix = id.slice(0, 1).toLowerCase()
+	let type
 
+	switch(prefix) {
+		case 'c':
+			type = 'card'
+			break;
+		case 'f':
+			type = 'font'
+			break;
+		case 'g':
+			type = 'gift'
+			break;
+	}
+
+	data[type].map((cur, index) => {
+		if(cur.id === id) {
+			return data[type][index]
+		}
+	})
 }
 
 function calculateGiftsSum(giftsData) {
