@@ -1,5 +1,6 @@
 $(function() {
 	setHomePage()
+	console.log(orderByAndTakeN('sales', -1, 'asc')(data.card))
 })
 
 const webapp = '/her'
@@ -59,13 +60,16 @@ function setNew() {
 
 }
 
+let showingData
 
 function setCategory(type) {
 	console.log('setCategory(' + type + ')')
 
 	setCategoryBlocks(type)
 
-	renderCategoryView(getData(type))
+	showingData = getData(type)
+
+	renderCategoryView('ID_ASC')
 }
 
 function setCategoryBlocks(type) {
@@ -79,8 +83,9 @@ function setCategoryBlocks(type) {
 					class='rec_text_40'></div>
 				<div class='rec40'>
 					<select
-						id='js_order_option'
-						class="rec_input163 border chi_16_30">
+						id='js_order'
+						class="rec_input163 border chi_16_30"
+						onchange='renderCategoryView(this.value)'>
 		          <option value="ID_ASC">依上架時間</option>
 		          <option value="SALES_DESC">依熱銷度</option>
 		          <option value="PRICE_ASC">依價格：低至高</option>
@@ -118,7 +123,24 @@ function getData(type) {
 	return data[type]
 }
 
-function renderCategoryView(data) {
+function renderCategoryView(order) {
+	let data
+
+	switch(order) {
+		case 'ID_ASC':
+			data = orderByAndTakeN('id', -1, 'asc')(showingData)
+			break
+		case 'SALES_DESC':
+			data = orderByAndTakeN('sales', -1, 'desc')(showingData)
+			break
+		case 'PRICE_ASC':
+			data = orderByAndTakeN('price', -1, 'asc')(showingData)
+			break
+		case 'PRICE_DESC':
+			data = orderByAndTakeN('price', -1, 'desc')(showingData)
+			break
+	}
+
 	$('#js_category').empty()
 
 	const categoryContent =
@@ -146,4 +168,16 @@ function renderCategoryView(data) {
 		}, '')
 
 		$('#js_category').append(categoryContent)
+}
+
+const add = ((a, b) => a + b);
+
+
+const orderByAndTakeN = (key, n, ascOrDesc) => {
+	const orderBy = R.prop(key)
+
+	return R.pipe(
+		R.sortWith([((R.toLower(ascOrDesc) === 'desc') ? R.descend(orderBy) : R.ascend(orderBy))]),
+		R.take(n)
+		)
 }

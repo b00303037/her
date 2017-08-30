@@ -7,7 +7,7 @@ $(function() {
 let cookie = {}
 
 
-// get cookie named 'her', parse to Object and return
+// get cookie named 'her', parse to Object & return
 function getCookie() {
 	const decodedCookie = decodeURIComponent(document.cookie);
   const ca = decodedCookie.split(';');
@@ -34,7 +34,7 @@ function setCookie(cookie, exdays) {
   document.cookie = "her=" + JSON.stringify(cookie) + ";" + expires + ";path=/";
 }
 
-
+// add product's id to Object cookie & reset cookie
 function addToBasket(id) {
 	console.log('addToBasket(' + id + ')')
 
@@ -55,6 +55,7 @@ function addToBasket(id) {
 	loadCookieToBasket()
 }
 
+// remove product's id to Object cookie & reset cookie
 function removeFromBasket(id) {
 	console.log('removeFromBasket(' + id + ')')
 
@@ -213,6 +214,26 @@ const giftBoxEmpty = `
 </div>
 `
 
+const giftBoxContent = (giftsData) => `
+	<div class='block280'>
+		<div class='block40 flex_left bgc_lightgray'>
+			<div class='box280 text_align'>商品名稱</div>
+			<div class='box90 text_align'>單價</div>
+			<div class='box90 text_align'>數量</div>
+			<div class='box90 text_align'>小計</div>
+		</div>
+		<div class='block240 flex_block overflow_y bgc_white'>
+
+			${getGiftsDataHTML(giftsData)}
+
+		</div>
+	</div>
+	<div class='block40 flex_spacebetween'>
+		<div class='rec_text_40 chi_20'>GIFT</div>
+		<div class='rec_text_40 chi_20'>$ ${calculateGiftsSum(giftsData)}</div>
+	</div>
+`
+
 const getGiftsDataHTML = (giftsData) => {
 	return giftsData.reduce((acc, gift) => acc += `
 		<div class='rec60 flex_left'>
@@ -251,31 +272,26 @@ const getGiftsDataHTML = (giftsData) => {
 	`, '')
 }
 
-const giftBoxContent = (giftsData) => `
-	<div class='block280'>
-		<div class='block40 flex_left bgc_lightgray'>
-			<div class='box280 text_align'>商品名稱</div>
-			<div class='box90 text_align'>單價</div>
-			<div class='box90 text_align'>數量</div>
-			<div class='box90 text_align'>小計</div>
-		</div>
-		<div class='block240 flex_block overflow_y bgc_white'>
+function adjustGiftQuantity(id, n) {
+	console.log('adjustQuantity: '+ id +', n:' + n)
 
-			${getGiftsDataHTML(giftsData)}
+	if(n===1 && cookie.gifts[id] < 6) {
+		cookie.gifts[id] += 1
+	}
 
-		</div>
-	</div>
-	<div class='block40 flex_spacebetween'>
-		<div class='rec_text_40 chi_20'>GIFT</div>
-		<div class='rec_text_40 chi_20'>$ ${calculateGiftsSum(giftsData)}</div>
-	</div>
-`
+	if(n===-1 && cookie.gifts[id] > 1) {
+		cookie.gifts[id] -= 1
+	}
 
-function getProductDetail(id) {
+	setCookie(cookie, 7)
+	loadCookieToBasket()
+}
 
-	const type = getType(id)
-
-	return R.find(R.propEq('id', id))(data[type])
+function calculateGiftsSum(giftsData) {
+	return giftsData.reduce((acc, gift) => {
+		acc += gift.price * gift.quantity
+		return acc
+	}, 0)
 }
 
 function getType(id) {
@@ -297,24 +313,9 @@ function getType(id) {
 	return type
 }
 
-function calculateGiftsSum(giftsData) {
-	return giftsData.reduce((acc, gift) => {
-		acc += gift.price * gift.quantity
-		return acc
-	}, 0)
-}
+function getProductDetail(id) {
 
-function adjustGiftQuantity(id, n) {
-	console.log('adjustQuantity: '+ id +', n:' + n)
+	const type = getType(id)
 
-	if(n===1 && cookie.gifts[id] < 6) {
-		cookie.gifts[id] += 1
-	}
-
-	if(n===-1 && cookie.gifts[id] > 1) {
-		cookie.gifts[id] -= 1
-	}
-
-	setCookie(cookie, 7)
-	loadCookieToBasket()
+	return R.find(R.propEq('id', id))(data[type])
 }
