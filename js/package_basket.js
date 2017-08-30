@@ -292,8 +292,8 @@ function getProductDetail(id) {
 	data[type].map((cur, index) => {
 		if(cur.id === id) {
 			console.log(data[type][index])
-			const result = data[type][index]
-			return result
+
+			return JSON.parse(data[type][index])
 		}
 	})
 }
