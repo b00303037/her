@@ -1,9 +1,6 @@
 $(function() {
 	setHomePage()
-	console.log(orderByAndTakeN('sales', -1, 'asc')(data.card))
 })
-
-const webapp = '/her'
 
 function setHomePage() {
 	document.title = 'her - HOME'
@@ -48,17 +45,112 @@ function setHomeBlocks() {
 	$('#Content_block').append(homeBlocks)
 }
 
-function setRecommend() {
+function setAd() {
+	const adCovers = getData('ad').reduce((acc, cur) => {
+		acc.push(cur.cover)
+		return acc
+	}, [])
 
+	const length = adCovers.length
+
+	if(length > 0) {
+		$('#js_ad').append("<img src='"+ adCovers[0] +"' width='340' height='400' />")
+	}
+
+	if(length > 1) {
+		let i = 1
+		setInterval(function() {
+			$('#js_ad img').attr('src', adCovers[i % length])
+			i++
+		}, 3000)
+	}
 }
 
-function setAd() {
+const recommendInfo = {
+	card: {
+		key: 'sales',
+		n: 2,
+		ascOrDesc: 'desc'
+	}, font: {
+		key: 'sales',
+		n: 1,
+		ascOrDesc: 'desc'
+	}, gift: {
+		key: 'sales',
+		n: 4,
+		ascOrDesc: 'desc'
+	}
+}
 
+function setRecommend() {
+	const products = getDatas(recommendInfo)
+
+	renderProductView(products, [220, 220, 160], 'js_recommend')
+}
+
+const newInfo = {
+	card: {
+		key: 'id',
+		n: 3,
+		ascOrDesc: 'desc',
+	}, font: {
+		key: 'id',
+		n: 2,
+		ascOrDesc: 'desc',
+	}, gift: {
+		key: 'id',
+		n: 5,
+		ascOrDesc: 'desc',
+	}
 }
 
 function setNew() {
+	const products = getDatas(newInfo)
 
+	renderProductView(products, [196, 196, 196], 'js_new')
 }
+
+function renderProductView(data, sizes, boxId) {
+
+	Object.keys(data).map((key, index) => {
+		const size = sizes[index]
+		const products = data[key].reduce((acc, cur, index) => {
+			const id = cur.id
+			const cover = cur.cover
+
+			let product = `
+				<div class='square${size}'>
+					<img src='${cover}'
+						width='${size}'
+						height='${size}'>
+					<button
+						type='button'
+						class='button_circle bgi_add_to_collection'></button>
+					<button
+						type='button'
+						class='button_circle bgi_add_to_basket'
+						onclick='addToBasket("${id}")'></button>
+				</div>
+			`
+
+			return acc.concat(product)
+		}, '')
+
+		$('#' + boxId).append(products)
+	})
+}
+
+function getDatas(info) {
+	const datas = {}
+
+	Object.keys(info).map((key) => {
+		const i = info[key]
+		datas[key] = orderByAndTakeN(i.key, i.n, i.ascOrDesc)(data[key])
+	})
+
+	return datas
+}
+
 
 let showingData
 
@@ -102,7 +194,6 @@ function setCategoryBlocks(type) {
 
 	$('#Content_block').append(categoryBlocks)
 
-
 	switch(type) {
 		case 'card':
 			document.title = 'her - CARD'
@@ -139,6 +230,8 @@ function renderCategoryView(order) {
 		case 'PRICE_DESC':
 			data = orderByAndTakeN('price', -1, 'desc')(showingData)
 			break
+		default:
+			data = orderByAndTakeN('id', -1, 'asc')(showingData)
 	}
 
 	$('#js_category').empty()
@@ -169,9 +262,6 @@ function renderCategoryView(order) {
 
 		$('#js_category').append(categoryContent)
 }
-
-const add = ((a, b) => a + b);
-
 
 const orderByAndTakeN = (key, n, ascOrDesc) => {
 	const orderBy = R.prop(key)

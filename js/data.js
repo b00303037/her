@@ -149,5 +149,16 @@ const data = {
 			'cover': 'http://cdn01.pinkoi.com/product/rcjRj3V2/0/500x0.jpg',
 			'sales': 31
 		},
-	],
+	], 'ad': [
+		{
+			'name': '1',
+			'cover': 'http://placekitten.com/340/400'
+		}, {
+			'name': '2',
+			'cover': 'http://placekitten.com/425/500'
+		}, {
+			'name': '3',
+			'cover': 'http://placekitten.com/680/800'
+		},
+	]
 }
