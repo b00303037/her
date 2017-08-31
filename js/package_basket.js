@@ -6,7 +6,6 @@ $(function() {
 // Object cookie
 let cookie = {}
 
-
 // get cookie named 'her', parse to Object & return
 function getCookie() {
 	const decodedCookie = decodeURIComponent(document.cookie);
@@ -52,7 +51,18 @@ function addToBasket(id) {
 	}
 
 	setCookie(cookie, 7)
-	loadCookieToBasket()
+
+	switch(type) {
+		case 'card':
+			loadCard()
+			break
+		case 'font':
+			loadFont()
+			break
+		case 'gift':
+			loadGifts()
+			break
+	}
 }
 
 // remove product's id to Object cookie & reset cookie
@@ -72,12 +82,31 @@ function removeFromBasket(id) {
 	}
 
 	setCookie(cookie, 7)
-	loadCookieToBasket()
+
+	switch(type) {
+		case 'card':
+			loadCard()
+			break
+		case 'font':
+			loadFont()
+			break
+		case 'gift':
+			loadGifts()
+			break
+	}
 }
+
+const duration = 800
 
 function loadCookieToBasket() {
 	console.log('loadCookieToBasket()')
 
+	loadCard()
+	loadFont()
+	loadGifts()
+}
+
+function loadCard() {
 	if(cookie.hasOwnProperty('card')) {
 		const cardId = cookie.card
 
@@ -87,9 +116,16 @@ function loadCookieToBasket() {
 		renderBasketCardBoxView(cardData)
 
 	} else {
-		$('#Basket_card_box').html(cardBoxEmpty)
+		$('#Basket_card_box')
+			.css('opacity', 0)
+			.html(cardBoxEmpty)
+			.animate({
+				opacity: 1
+			}, duration)
 	}
+}
 
+function loadFont() {
 	if(cookie.hasOwnProperty('font')) {
 		const fontId = cookie.font
 
@@ -99,9 +135,16 @@ function loadCookieToBasket() {
 		renderBasketFontBoxView(fontData)
 
 	} else {
-		$('#Basket_font_box').html(fontBoxEmpty)
+		$('#Basket_font_box')
+			.css('opacity', 0)
+			.html(fontBoxEmpty)
+			.animate({
+				opacity: 1
+			}, duration)
 	}
+}
 
+function loadGifts() {
 	if(cookie.hasOwnProperty('gifts')) {
 		const gifts = cookie.gifts
 
@@ -119,23 +162,43 @@ function loadCookieToBasket() {
 		renderBasketGiftBoxView(giftsData)
 
 	} else {
-		$('#Basket_gift_box').html(giftBoxEmpty)
+		$('#Basket_gift_box')
+			.css('opacity', 0)
+			.html(giftBoxEmpty)
+			.animate({
+				opacity: 1
+			}, duration)
 	}
 }
 
 function renderBasketCardBoxView(cardData) {
-	$('#Basket_card_box').empty()
-	$('#Basket_card_box').append(cardOrFontBoxContent(cardData))
+	$('#Basket_card_box')
+		.empty()
+		.css('opacity', 0)
+		.append(cardOrFontBoxContent(cardData))
+		.animate({
+			opacity: 1
+		}, duration)
 }
 
 function renderBasketFontBoxView(fontData) {
-	$('#Basket_font_box').empty()
-	$('#Basket_font_box').append(cardOrFontBoxContent(fontData))
+	$('#Basket_font_box')
+		.empty()
+		.css('opacity', 0)
+		.append(cardOrFontBoxContent(fontData))
+		.animate({
+			opacity: 1
+		}, duration)
 }
 
 function renderBasketGiftBoxView(giftsData) {
-	$('#Basket_gift_box').empty()
-	$('#Basket_gift_box').append(giftBoxContent(giftsData))
+	$('#Basket_gift_box')
+		.empty()
+		.css('opacity', 0)
+		.append(giftBoxContent(giftsData))
+		.animate({
+			opacity: 1
+		}, duration)
 }
 
 const cardBoxEmpty = `
@@ -284,7 +347,7 @@ function adjustGiftQuantity(id, n) {
 	}
 
 	setCookie(cookie, 7)
-	loadCookieToBasket()
+	loadGifts()
 }
 
 function calculateGiftsSum(giftsData) {
