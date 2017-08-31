@@ -175,7 +175,7 @@ function renderBasketCardBoxView(cardData) {
 	$('#Basket_card_box')
 		.empty()
 		.css('opacity', 0)
-		.append(cardOrFontBoxContent(cardData))
+		.append(cardOrFontBoxContent(cardData, 'CARD'))
 		.animate({
 			opacity: 1
 		}, duration)
@@ -185,7 +185,7 @@ function renderBasketFontBoxView(fontData) {
 	$('#Basket_font_box')
 		.empty()
 		.css('opacity', 0)
-		.append(cardOrFontBoxContent(fontData))
+		.append(cardOrFontBoxContent(fontData, 'FONT'))
 		.animate({
 			opacity: 1
 		}, duration)
@@ -241,7 +241,7 @@ const fontBoxEmpty = `
 </div>
 `
 
-const cardOrFontBoxContent = (data) => `
+const cardOrFontBoxContent = (data, type) => `
 	<div class='square220'>
 		<img src='${data.cover}'
 			 width='220'
@@ -254,7 +254,8 @@ const cardOrFontBoxContent = (data) => `
 	<div class='block60 flex_left bgc_white'>
 		<div class='rec_text_60 chi_16_30'>${data.name}</div>
 	</div>
-	<div class='block40 flex_right'>
+	<div class='block40 flex_spacebetween'>
+		<div class='rec_text_40 chi_20'>${type}</div>
 		<div class='rec_text_40 chi_20'>$ ${data.price}</div>
 	</div>
 `
