@@ -20,8 +20,9 @@ function getCookie() {
       return JSON.parse(c.substring('her='.length, c.length));
     }
   }
-  // if cookie doesn't exist yet, set cookie with Object cookie {}
+  // if cookie doesn't exist yet, set cookie with Object cookie {} & return
   setCookie(cookie, 7)
+  return cookie
 }
 
 // set cookie with Object cookie
