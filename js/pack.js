@@ -1,9 +1,18 @@
 function setPackPage() {
 	setPackBlocks()
 	loadCookieToPack(getPackCookie())
-	addConstrains()
+
+	/* pack_constrains.js */
+	addAttributes(constrains)
 	checkMaxWords()
 }
+
+/*
+
+Content 在有選卡片下才顯示
+刪除卡片時移除 Content Block
+
+*/
 
 function setPackBlocks() {
 	$('#Content_block').empty()
@@ -12,23 +21,24 @@ function setPackBlocks() {
 		<form
 			id='Pack_form'
 			class='box820 flex_block'
+			action=''
 			method='post'>
 			<div class='block40 flex_spacebetween'>
 				<div class='rec_text_40'>包裹｜PACK</div>
 				<div class='rec40'>
 					<button
+						id='Reset_button'
 						type='button'
-						class='button_roundcorner chi_16_30 bgc_gray'
-						onclick='resetPack()'>清空</button>
+						class='button_roundcorner chi_16_30 bgc_gray'>清空</button>
 					<button
+						id='Save_button'
 						type='button'
-						class='button_roundcorner chi_16_30 bgc_green'
-						onclick='savePack()'>儲存修改</button>
+						class='button_roundcorner chi_16_30 bgc_green'>儲存修改</button>
 					<button
+						id='Send_button'
 						type='submit'
 						form='Pack_form'
-						class='button_roundcorner chi_16_30 bgc_pink'
-						onclick='sendPack()'>寄出包裹</button>
+						class='button_roundcorner chi_16_30 bgc_pink'>寄出包裹</button>
 				</div>
 			</div>
 			<div class='box400'>
@@ -81,9 +91,9 @@ function setPackBlocks() {
 							data-name='recipient_city'
 							data-style='rec_input113 border chi_16_30'></div>
 						<div
-							id='Recipient_disrict'
+							id='Recipient_district'
 							data-role='district'
-							data-name='recipient_disrict'
+							data-name='recipient_district'
 							data-style='rec_input113 border chi_16_30'></div>
 					</div>
 					<div class='block80 flex_left'>
@@ -146,9 +156,9 @@ function setPackBlocks() {
 							data-name='recipient_city'
 							data-style='rec_input113 border chi_16_30'></div>
 						<div
-							id='Sender_disrict'
+							id='Sender_district'
 							data-role='district'
-							data-name='recipient_disrict'
+							data-name='recipient_district'
 							data-style='rec_input113 border chi_16_30'></div>
 					</div>
 					<div class='block80 flex_left'>
@@ -175,14 +185,14 @@ function setPackBlocks() {
 				<div class='block100'>
 					<textarea
 						id= "Content"
-						class='rec_textarea800 border chi_16_30'
-						onkeyup='checkMaxWords()'></textarea>
+						class='rec_textarea800 border chi_16_30'></textarea>
 				</div>
 			</div>
 		</form>
 	`
-
 	$('#Content_block').append(packBlocks)
+
+	addAttributes(events)
 
 	$("#Date_mailed").datepicker({ minDate: +14 })
 		.datepicker("option", "changeMonth", true)
@@ -200,30 +210,81 @@ function getPackCookie() {
 	}
 }
 
+const packContents = [
+		'Pack_name', 'Date_mailed',
+		'Recipient_name', 'Recipient_phone', 'Recipient_addr',
+		'Sender_name', 'Sender_phone', 'Sender_addr',
+		'Content'
+	]
+
 function loadCookieToPack(packCookie) {
-	$('#Pack_name').val(cookie.pack.pack_name)
-	$('#Date_mailed').val(cookie.pack.date_mailed)
-	$('#Recipient_name').val(cookie.pack.recipient_name)
-	$('#Recipient_phone').val(cookie.pack.recipient_phone)
+	packContents.map((name) => {
+		$('#' + name).val(cookie.pack[name])
+	})
 	$('#Recipient_addrs').twzipcode({
 			'readonly': true,
-			'zipcodeSel': cookie.pack.recipient_postal_code
+			'zipcodeSel': cookie.pack.Recipient_postal_code
 		})
-	$('#Recipient_addr').val(cookie.pack.recipient_addr)
-	$('#Sender_name').val(cookie.pack.sender_name)
-	$('#Sender_phone').val(cookie.pack.sender_phone)
 	$('#Sender_addrs').twzipcode({
 			'readonly': true,
-			'zipcodeSel': cookie.pack.sender_postal_code
+			'zipcodeSel': cookie.pack.Sender_postal_code
 		})
-	$('#Sender_city select').val(cookie.pack.sender_city)
-	$('#Sender_district select').val(cookie.pack.sender_district)
-	$('#Sender_addr').val(cookie.pack.sender_addr)
-	$('#Content').val(cookie.pack.content)
 }
 
+const events = {
+	'#Reset_button': {
+		'onclick': 'resetPack()',
+	},
+	'#Save_button': {
+		'onclick': 'savePack()',
+	},
+	'#Send_button': {
+		'onclick': 'sendPack()',
+	},
+	'Content': {
+		'onkeyup': 'checkMaxWords()',
+	},
+}
+
+const airTableUrl = 'https://api.airtable.com/v0/appX2N31o7ZsFILRK/Packs'
+const headers = new Headers()
+
+const d = {
+		  "fields": {
+		    "Recipient_name": "You",
+		    "Recipient_phone": "0900-000-000",
+		    "Recipient_postal_code": "100",
+		    "Recipient_city": "臺北市",
+		    "Recipient_district": "中正區",
+		    "Recipient_addr": "路",
+		    "Date_mailed": "2017-09-03",
+		    "Sender_postal_code": "106",
+		    "Sender_city": "臺北市",
+		    "Sender_district": "大安區",
+		    "Sender_addr": "路",
+		    "Content": "，",
+		    "Pack_name": "To You",
+		    "Sender_name": "You",
+		    "Sender_phone": "0900-000-000"
+		  }
+		}
+
+headers.append('Authorization', 'Bearer keybHkSnVMmPswTGI')
+headers.append('Content-type', 'application/json')
+
 function sendPack() {
+	// savePack()
 	checkPack()
+
+	fetch(airTableUrl, {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(d)
+	})
+	.then((response) => response.json())
+	.then(console.log)
+
+	clearPack()
 }
 
 function checkPack() {
@@ -238,18 +299,20 @@ function resetPack() {
 	}
 }
 
+function clearPack() {
+
+}
+
 function savePack() {
-	cookie.pack.pack_name = $('#Pack_name').val()
-	cookie.pack.date_mailed = $('#Date_mailed').val()
-	cookie.pack.recipient_name = $('#Recipient_name').val()
-	cookie.pack.recipient_phone = $('#Recipient_phone').val()
-	cookie.pack.recipient_postal_code = $('#Recipient_postal_code input').val()
-	cookie.pack.recipient_addr = $('#Recipient_addr').val()
-	cookie.pack.sender_name = $('#Sender_name').val()
-	cookie.pack.sender_phone = $('#Sender_phone').val()
-	cookie.pack.sender_postal_code = $('#Sender_postal_code input').val()
-	cookie.pack.sender_addr = $('#Sender_addr').val()
-	cookie.pack.content = $('#Content').val()
+	packContents.map((name) => {
+		cookie.pack[name] = $('#' + name).val()
+	})
+	cookie.pack.Recipient_postal_code = $('#Recipient_postal_code input').val()
+	cookie.pack.Recipient_city = $('#Recipient_city select').val()
+	cookie.pack.Recipient_district = $('#Recipient_district select').val()
+	cookie.pack.Sender_postal_code = $('#Sender_postal_code input').val()
+	cookie.pack.Sender_city = $('#Sender_city select').val()
+	cookie.pack.Sender_district = $('#Sender_district select').val()
 
 	setCookie(cookie, 7)
 
