@@ -3,6 +3,7 @@ function setPackPage() {
 	loadCookieToPack(getPackCookie())
 
 	/* pack_constrains.js */
+	addAttributes(events)
 	addAttributes(constrains)
 	checkMaxWords()
 }
@@ -20,11 +21,11 @@ function setPackBlocks() {
 	const packBlocks = `
 		<form
 			id='Pack_form'
-			class='box820 flex_block'
-			action=''
-			method='post'>
+			class='box820 flex_block'>
 			<div class='block40 flex_spacebetween'>
-				<div class='rec_text_40'>包裹｜PACK</div>
+				<div
+					id='js_title'
+					class='rec_text_40'></div>
 				<div class='rec40'>
 					<button
 						id='Reset_button'
@@ -192,12 +193,15 @@ function setPackBlocks() {
 	`
 	$('#Content_block').append(packBlocks)
 
-	addAttributes(events)
-
-	$("#Date_mailed").datepicker({ minDate: +14 })
+	// why this CAN NOT be placed after function setPackBlocks()
+	$("#Date_mailed")
+		.datepicker({ minDate: +14 })
 		.datepicker("option", "changeMonth", true)
 		.datepicker("option", "changeYear", true)
 		.datepicker("option", "dateFormat", "yy-mm-dd");
+
+	document.title = 'her - PACK'
+	$('#js_title').text('包裹｜PACK')
 }
 
 function getPackCookie() {
@@ -220,6 +224,7 @@ const packContents = [
 function loadCookieToPack(packCookie) {
 	packContents.map((name) => {
 		$('#' + name).val(cookie.pack[name])
+		console.log(name + ': ' + cookie.pack[name])
 	})
 	$('#Recipient_addrs').twzipcode({
 			'readonly': true,
@@ -231,60 +236,40 @@ function loadCookieToPack(packCookie) {
 		})
 }
 
-const events = {
-	'#Reset_button': {
-		'onclick': 'resetPack()',
-	},
-	'#Save_button': {
-		'onclick': 'savePack()',
-	},
-	'#Send_button': {
-		'onclick': 'sendPack()',
-	},
-	'Content': {
-		'onkeyup': 'checkMaxWords()',
-	},
-}
-
 const airTableUrl = 'https://api.airtable.com/v0/appX2N31o7ZsFILRK/Packs'
 const headers = new Headers()
-
-const d = {
-		  "fields": {
-		    "Recipient_name": "You",
-		    "Recipient_phone": "0900-000-000",
-		    "Recipient_postal_code": "100",
-		    "Recipient_city": "臺北市",
-		    "Recipient_district": "中正區",
-		    "Recipient_addr": "路",
-		    "Date_mailed": "2017-09-03",
-		    "Sender_postal_code": "106",
-		    "Sender_city": "臺北市",
-		    "Sender_district": "大安區",
-		    "Sender_addr": "路",
-		    "Content": "，",
-		    "Pack_name": "To You",
-		    "Sender_name": "You",
-		    "Sender_phone": "0900-000-000"
-		  }
-		}
 
 headers.append('Authorization', 'Bearer keybHkSnVMmPswTGI')
 headers.append('Content-type', 'application/json')
 
 function sendPack() {
-	// savePack()
+
+	savePack()
 	checkPack()
 
-	fetch(airTableUrl, {
-		method: 'POST',
-		headers: headers,
-		body: JSON.stringify(d)
-	})
-	.then((response) => response.json())
-	.then(console.log)
+	if($('input:invalid').length !== 0 || $('textarea:invalid').length !== 0 || $('select:invalid').length !== 0) {
+		console.log('There is something wrong')
+	} else {
 
-	clearPack()
+		const record = {
+			'fields': cookie.pack
+		}
+
+		fetch(airTableUrl, {
+			method: 'POST',
+			headers: headers,
+			body: JSON.stringify(record)
+		})
+		.then((response) => response.json())
+		.then((result) => {
+			console.log(result)
+			$('input:invalid').removeClass(':invalid')
+			$('textarea:invalid').removeClass(':invalid')
+			$('select:invalid').removeClass(':invalid')
+			clearPack()
+			alert('寄出成功')
+		})
+	}
 }
 
 function checkPack() {
@@ -292,15 +277,19 @@ function checkPack() {
 }
 
 function resetPack() {
-	if(confirm('確認清空包裹？')) {
-		$('#Pack_form')[0].reset()
-		cookie.pack = {}
-		setCookie(cookie, 7)
+	if(confirm('確認清空包裹嗎？')) {
+		clearPack()
 	}
 }
 
 function clearPack() {
+	$('#Pack_form')[0].reset()
+	$('#Recipient_addrs').twzipcode('reset')
+	$('#Sender_addrs').twzipcode('reset')
+	checkMaxWords()
 
+	cookie.pack = {}
+	setCookie(cookie, 7)
 }
 
 function savePack() {
@@ -315,6 +304,4 @@ function savePack() {
 	cookie.pack.Sender_district = $('#Sender_district select').val()
 
 	setCookie(cookie, 7)
-
-	alert('儲存成功')
 }

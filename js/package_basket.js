@@ -114,15 +114,11 @@ function loadCard() {
 		const cardData = getProductDetail(cardId)
 		console.log(cardData)
 
-		renderBasketCardBoxView(cardData)
+		const cardBoxContent = getCardOrFontBoxContent(cardData, 'CARD')
+		renderBasketBoxView('Basket_card_box', cardBoxContent)
 
 	} else {
-		$('#Basket_card_box')
-			.css('opacity', 0)
-			.html(cardBoxEmpty)
-			.animate({
-				opacity: 1
-			}, duration)
+		renderEmptyBasketBoxView('Basket_card_box', cardBoxEmpty)
 	}
 }
 
@@ -133,15 +129,11 @@ function loadFont() {
 		const fontData = getProductDetail(fontId)
 		console.log(fontData)
 
-		renderBasketFontBoxView(fontData)
+		const fontBoxContent = getCardOrFontBoxContent(fontData, 'FONT')
+		renderBasketBoxView('Basket_font_box', fontBoxContent)
 
 	} else {
-		$('#Basket_font_box')
-			.css('opacity', 0)
-			.html(fontBoxEmpty)
-			.animate({
-				opacity: 1
-			}, duration)
+		renderEmptyBasketBoxView('Basket_font_box', fontBoxEmpty)
 	}
 }
 
@@ -160,43 +152,28 @@ function loadGifts() {
 			return acc
 		}, [])
 
-		renderBasketGiftBoxView(giftsData)
+		const giftBoxContent = getGiftBoxContent(giftsData)
+		renderBasketBoxView('Basket_gift_box', giftBoxContent)
 
 	} else {
-		$('#Basket_gift_box')
-			.css('opacity', 0)
-			.html(giftBoxEmpty)
-			.animate({
-				opacity: 1
-			}, duration)
+		renderEmptyBasketBoxView('Basket_gift_box', giftBoxEmpty)
 	}
 }
 
-function renderBasketCardBoxView(cardData) {
-	$('#Basket_card_box')
+function renderBasketBoxView(boxId, data) {
+	$('#' + boxId)
 		.empty()
 		.css('opacity', 0)
-		.append(cardOrFontBoxContent(cardData, 'CARD'))
+		.append(data)
 		.animate({
 			opacity: 1
 		}, duration)
 }
 
-function renderBasketFontBoxView(fontData) {
-	$('#Basket_font_box')
-		.empty()
+function renderEmptyBasketBoxView(boxId, boxEmpty) {
+	$('#' + boxId)
 		.css('opacity', 0)
-		.append(cardOrFontBoxContent(fontData, 'FONT'))
-		.animate({
-			opacity: 1
-		}, duration)
-}
-
-function renderBasketGiftBoxView(giftsData) {
-	$('#Basket_gift_box')
-		.empty()
-		.css('opacity', 0)
-		.append(giftBoxContent(giftsData))
+		.html(boxEmpty)
 		.animate({
 			opacity: 1
 		}, duration)
@@ -242,7 +219,7 @@ const fontBoxEmpty = `
 </div>
 `
 
-const cardOrFontBoxContent = (data, type) => `
+const getCardOrFontBoxContent = (data, type) => `
 	<div class='square220'>
 		<img src='${data.cover}'
 			 width='220'
@@ -279,7 +256,7 @@ const giftBoxEmpty = `
 </div>
 `
 
-const giftBoxContent = (giftsData) => `
+const getGiftBoxContent = (giftsData) => `
 	<div class='block280'>
 		<div class='block40 flex_left bgc_lightgray'>
 			<div class='box280 text_align'>商品名稱</div>

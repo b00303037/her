@@ -1,3 +1,18 @@
+const events = {
+	'#Reset_button': {
+		'onclick': 'resetPack()',
+	},
+	'#Save_button': {
+		'onclick': 'savePack()',
+	},
+	'#Send_button': {
+		'onclick': 'sendPack()',
+	},
+	'#Content': {
+		'onkeyup': 'checkMaxWords()',
+	},
+}
+
 const constrains = {
 	'#Pack_form': {
 		'onsubmit': 'event.preventDefault()'
@@ -16,7 +31,10 @@ const constrains = {
 		pattern: '^09[0-9]{2}-?[0-9]{3}-?[0-9]{3}$',
 		required: 'required',
 	},
-	'#Recipient_postal_code input': {
+	'#Recipient_city select': {
+		required: 'required',
+	},
+	'#Recipient_district select': {
 		required: 'required',
 	},
 	'#Recipient_addr' : {
@@ -37,7 +55,10 @@ const constrains = {
 		pattern: '^09[0-9]{2}-?[0-9]{3}-?[0-9]{3}$',
 		required: 'required',
 	},
-	'#Sender_postal_code input': {
+	'#Sender_city select': {
+		required: 'required',
+	},
+	'#Sender_district select': {
 		required: 'required',
 	},
 	'#Sender_addr' : {
