@@ -83,7 +83,7 @@ const recommendInfo = {
 }
 
 function setRecommend() {
-	const products = getDatas(recommendInfo)
+	const products = getDataByInfo(recommendInfo)
 
 	renderProductView(products, [220, 220, 160], 'js_recommend')
 }
@@ -105,7 +105,7 @@ const newInfo = {
 }
 
 function setNew() {
-	const products = getDatas(newInfo)
+	const products = getDataByInfo(newInfo)
 
 	renderProductView(products, [196, 196, 196], 'js_new')
 }
@@ -140,7 +140,7 @@ function renderProductView(data, sizes, boxId) {
 	})
 }
 
-function getDatas(info) {
+function getDataByInfo(info) {
 	const datas = {}
 
 	Object.keys(info).map((key) => {
