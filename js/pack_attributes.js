@@ -23,7 +23,7 @@ const constrains = {
 	'#Recipient_name': {
 		placeholder: '請輸入中文姓名',
 		maxlength: 12,
-		pattern: '[\u4e00-\u9fa5]',
+		pattern: '[\u4e00-\u9fa5]*',
 		required: 'required',
 	},
 	'#Recipient_phone': {
@@ -47,7 +47,7 @@ const constrains = {
 	'#Sender_name': {
 		placeholder: '請輸入中文姓名',
 		maxlength: 12,
-		pattern: '[\u4e00-\u9fa5]',
+		pattern: '[\u4e00-\u9fa5]*',
 		required: 'required',
 	},
 	'#Sender_phone': {
