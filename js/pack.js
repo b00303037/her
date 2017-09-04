@@ -255,6 +255,10 @@ function sendPack() {
 			'fields': cookie.pack
 		}
 
+		record.fields.card = cookie.card
+		record.fields.font = cookie.font
+		record.fields.gifts = JSON.stringify(cookie.gifts)
+
 		fetch(airTableUrl, {
 			method: 'POST',
 			headers: headers,
